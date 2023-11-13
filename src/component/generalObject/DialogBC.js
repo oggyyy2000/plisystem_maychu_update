@@ -142,7 +142,7 @@ export default function FullDialogBC(props) {
             <BC data={post} obj1={obj1} obj2={obj2} obj3={obj3} obj4={obj4} />
           </Box>
           <Box style={{ height: "100%", overflow: "hidden" }} p={0} flex="1">
-            <XacThuc />
+            <XacThuc data={post} />
           </Box>
         </Box>
       </Dialog>

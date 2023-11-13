@@ -27,3 +27,4 @@ export const anhthietbiloi = "anhthietbiloi";
 export const idtuyen = "idtuyen";
 export const idthietbi = "idthietbi";
 export const idanh = "idanh";
+export const tuyenSelect = "tuyenSelect";

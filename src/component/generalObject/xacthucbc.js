@@ -46,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const XacThuc = () => {
+const XacThuc = (props) => {
+  const post = props.data ? props.data : "";
   const classes = useStyles();
   const [value, setValue] = useState("none");
   const [view, setView] = useState(true);
@@ -57,6 +58,7 @@ const XacThuc = () => {
     setValue(event.target.value);
   };
 
+  const chi_tiet_kiem_tra = post.chi_tiet_kiem_tra;
   const handleUpdate = () => {
     // alert(value);
     dispatch({ type: actions.Temp_value, data: value });
@@ -64,7 +66,7 @@ const XacThuc = () => {
 
   const handleClick = (item) => {
     setView(!view);
-    setImg(item.img);
+    setImg(item);
     setValue(item.type);
   };
 
@@ -90,7 +92,7 @@ const XacThuc = () => {
                 cols={4}
                 style={{ margin: 0 }}
               >
-                {itemData.map((item, index) => (
+                {chi_tiet_kiem_tra?.map((item, index) => (
                   <ImageListItem
                     key={index}
                     cols={1}
@@ -99,15 +101,20 @@ const XacThuc = () => {
                         ? { border: "1px solid red" }
                         : { border: "1px solid green" }
                     }
-                    onClick={() => handleClick(item)}
+                    onClick={() =>
+                      handleClick(
+                        `http://epsmarttech.com.vn:8000/${item.defect_img_detail}`
+                      )
+                    }
                   >
                     <img
-                      src={ChangerUrl(item.img)}
+                      // src={ChangerUrl(item.defect_img_detail)}
+                      src={`http://epsmarttech.com.vn:8000/${item.defect_img_detail}`}
                       style={{
-                        margin: "5px 0px 0px 0px",
-                        // height: "100%",
-                        // width: "50%",
-                        marginLeft: "5px",
+                        margin: "0px 0px 0px 0px",
+                        height: "100%",
+                        width: "100%",
+                        // marginLeft: "5px",
                         // marginBottom: "2px",
                         top: 0,
                         transform: "translateY(0%)",

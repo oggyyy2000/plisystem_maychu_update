@@ -21,6 +21,10 @@ import UndoIcon from "@material-ui/icons/Undo";
 import IconButton from "@material-ui/core/IconButton";
 import Map_Item from "./Map_Item";
 
+// Redux
+import * as actions from "../../redux/types";
+import { Provider, useSelector, useDispatch } from "react-redux";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -80,12 +84,9 @@ export default function DSBT() {
   const [open, setOpen] = React.useState(false);
   const [Detail, setDetail] = useState({});
   const [value, setValue] = React.useState(0);
-  const tuyen = "T87";
-  const urlvt = `${process.env.REACT_APP_API_URL}getallvitribytuyens?${
-    tuyen ? "&ma_tuyen=" + tuyen : ""
-  }`;
+
+  const tuyenSelected = useSelector((state) => state.tuyenSelect);
   const urlt = `${process.env.REACT_APP_API_URL}getalltuyens`;
-  const [ListVTT, setListVTT] = useState([]);
   const [ListT, setListT] = useState([]);
 
   useEffect(() => {

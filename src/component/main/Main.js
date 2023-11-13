@@ -179,7 +179,7 @@ const Navbar = [
   // },
   {
     index: 1,
-    ten_navbar: "Đợt bay tùy chọn",
+    ten_navbar: "Đợt bay ",
     url: "/app/nhapdulieu",
     icon: <AddCircleOutlineIcon />,
   },
@@ -191,13 +191,13 @@ const Navbar = [
   },
   {
     index: 3,
-    ten_navbar: "Giám sát sức khỏe thiết bị",
+    ten_navbar: "Sức khỏe thiết bị",
     url: "/app/sktb",
     icon: <EqualizerRoundedIcon />,
   },
   {
     index: 4,
-    ten_navbar: "Danh sách bất thường",
+    ten_navbar: "Bất thường",
     url: "/app/dsbt",
     icon: <EqualizerRoundedIcon />,
   },

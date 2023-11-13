@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import axios from "axios";
 //-----------------------------------------
 import { withStyles, makeStyles } from "@material-ui/core/styles";
@@ -16,7 +16,6 @@ import ImportExportIcon from "@material-ui/icons/ImportExport";
 import SaveIcon from "@material-ui/icons/Save";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 //-----------------------------------------
 import Loading from "../../generalObject/Loading";
 
@@ -888,7 +887,7 @@ export default function DialogSavePopup(props) {
         onClick={handleClickOpen}
         style={{ float: "right" }}
       >
-        Thêm ĐKTM <ImportExportIcon style={{ color: "black" }} />
+        Thêm Dữ Liệu <ImportExportIcon style={{ color: "black" }} />
       </Button>
       <Dialog
         onClose={handleClose}

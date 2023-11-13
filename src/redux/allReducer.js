@@ -27,6 +27,7 @@ import anhthietbiloi from "./reducers/anhthietbiloi";
 import idtuyen from "./reducers/idtuyen";
 import idthietbi from "./reducers/idthietbi";
 import idanh from "./reducers/idanh";
+import tuyenSelect from "./reducers/tuyenSelect";
 
 const myReducer = combineReducers({
   cot,
@@ -57,5 +58,6 @@ const myReducer = combineReducers({
   idtuyen,
   idthietbi,
   idanh,
+  tuyenSelect,
 });
 export default myReducer;

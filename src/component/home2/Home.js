@@ -4,21 +4,19 @@ import { Resize, ResizeHorizon, ResizeVertical } from "react-resize-layout";
 import Box from "@material-ui/core/Box";
 import $ from "jquery";
 import Loading from "../generalObject/Loading";
-import { useSelector } from "react-redux";
 import ChartDSBT from "./ChartDSBT";
 import DotBay from "./nhapdulieu";
-import DataFetching from "./DataFetching";
+import Main3D from "../Main3D";
 import Map_Item from "./Map_Item";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
+
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../../redux/types";
+import { tuyenSelector } from "../../redux/selectors";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -80,7 +78,8 @@ export default function Home() {
   const [height, setHeight] = useState(0);
   const sizeResize = useSelector((state) => state.sizeResize);
   const [ListTuyen, setListTuyen] = useState([]);
-  const [Tuyen, setTuyen] = useState("T87");
+  const dispatch = useDispatch();
+  const tuyenSelected = useSelector(tuyenSelector);
   const classes = useStyles();
   const urlt = process.env.REACT_APP_API_URL + "getalltuyens";
 
@@ -96,15 +95,10 @@ export default function Home() {
     });
   }, []);
 
-  const onChange = (event, setFunction) => {
-    event.preventDefault();
+  const onChangeSelectTuyen = (event) => {
     const target = event.target;
     const value = target.value;
-    setFunction(value);
-  };
-
-  const onChangeSelectTuyen = (event) => {
-    onChange(event, setTuyen);
+    dispatch({ type: actions.tuyenSelect, data: value });
   };
 
   useEffect(() => {
@@ -167,7 +161,7 @@ export default function Home() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label={"Chọn Tuyến"}
-                value={Tuyen}
+                value={tuyenSelected}
                 style={{ height: 30 }}
                 onChange={onChangeSelectTuyen}
                 displayEmpty
@@ -194,15 +188,36 @@ export default function Home() {
                     className="btnRedict"
                     onDoubleClick={() => navigate("/app/dsbt")}
                   >
-                    <ChartDSBT tuyen={Tuyen} />
+                    <ChartDSBT tuyen={tuyenSelected} />
                   </button>
                 </ResizeVertical>
                 <ResizeVertical height={sizeResize.height2} id="map">
                   <button
                     className="btnRedict"
-                    onDoubleClick={() => navigate("/app/sktb")}
+                    onDoubleClick={() => navigate("/app/m3d")}
                   >
-                    <DataFetching tuyen={Tuyen} />
+                    {/* <DataFetching tuyen={Tuyen} /> */}
+                    <div>
+                      <div
+                        id="3d_title"
+                        style={{
+                          position: "absolute",
+                          marginTop: "220px",
+                          marginLeft: "20px",
+                          zIndex: "2",
+                        }}
+                      >
+                        <p style={{ color: "white" }}>
+                          <b>Hành lang tuyến T87 Mai Động-Thanh Nhàn</b>
+                        </p>
+                      </div>
+                      <div
+                        id="3d_content"
+                        style={{ width: "100%", height: "16.75rem" }}
+                      >
+                        <Main3D />
+                      </div>
+                    </div>
                   </button>
                 </ResizeVertical>
               </Resize>
@@ -214,7 +229,7 @@ export default function Home() {
                     className="btnRedict"
                     onDoubleClick={() => navigate("/app/thietbi")}
                   >
-                    <Map_Item tuyen={Tuyen} />
+                    <Map_Item tuyen={tuyenSelected} />
                   </button>
                 </ResizeVertical>
                 <ResizeVertical height={sizeResize.height2} id="map">
@@ -222,7 +237,7 @@ export default function Home() {
                     className="btnRedict"
                     onDoubleClick={() => navigate("/app/nhapdulieu")}
                   >
-                    <DotBay tuyen={Tuyen} />
+                    <DotBay tuyen={tuyenSelected} />
                   </button>
                 </ResizeVertical>
               </Resize>

@@ -11,11 +11,7 @@ export default function BC(props) {
   //////
   return (
     <>
-      {post.hinh_thuc_kiem_tra === "ngay" ? (
-        <BCNGay data={post} obj1={obj1} obj2={obj2} obj3={obj3} obj4={obj4} />
-      ) : (
-        ""
-      )}
+      <BCNGay data={post} obj1={obj1} obj2={obj2} obj3={obj3} obj4={obj4} />
     </>
   );
 }

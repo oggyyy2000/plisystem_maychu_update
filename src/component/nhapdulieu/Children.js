@@ -24,7 +24,7 @@ export default function Children() {
       setTimeout(func, 50);
     });
   }, []);
-
+  console.log(sizeResize, height);
   return (
     <Box
       id={"TrangChuContainer"}

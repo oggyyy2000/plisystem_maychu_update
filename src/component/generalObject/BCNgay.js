@@ -2,9 +2,15 @@ import React from "react";
 import "../../asset/css/generalObject/BC1.css";
 import { getTextDisplay } from "../../util/GetTenTuyen";
 import { useSelector } from "react-redux";
+import { BeachAccess } from "@material-ui/icons";
 
 const BCNGay = (props) => {
   const post = props.data ? props.data : "";
+
+  const chi_tiet_kiem_tra = post.chi_tiet_kiem_tra;
+  let count_daydan;
+  const latitude = 0;
+  const longtitude = 0;
   var date = post ? new Date(post.ngay_kiem_tra) : "";
   /////
   const Tempvalue = useSelector((state) => state.tempvalue);
@@ -332,7 +338,16 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  .............................................................
+                  {post?.ma_dot_kiem_tra
+                    ? post.ma_tuyen +
+                      "_" +
+                      post.ngay_kiem_tra +
+                      "_" +
+                      post.bat_dau_doan +
+                      "_" +
+                      post.ket_thuc_doan +
+                      "                  "
+                    : "............................................................."}
                 </span>
                 <span
                   style={{
@@ -353,7 +368,10 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  {newdate}
+                  {/* {newdate} */}
+                  {post?.ngay_kiem_tra
+                    ? post?.ngay_kiem_tra
+                    : "........................"}
                 </span>
               </p>
               <p
@@ -380,7 +398,10 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  {getTextDisplay(post.ma_tuyen)}
+                  {/* {getTextDisplay(post.ma_tuyen)} */}
+                  {post?.ma_tuyen
+                    ? post?.ma_tuyen
+                    : "......................................"}
                 </span>
               </p>
               <p
@@ -403,7 +424,11 @@ const BCNGay = (props) => {
                   }}
                 >
                   :
-                  .............................................................................................................
+                  {post?.hinh_thuc_kiem_tra === "ngay"
+                    ? " Ngày"
+                    : post?.hinh_thuc_kiem_tra
+                    ? post?.hinh_thuc_kiem_tra
+                    : "............................................................................................................."}
                 </span>
               </p>
               <p
@@ -422,7 +447,7 @@ const BCNGay = (props) => {
                   &nbsp;
                 </span>
                 <span style={{ fontFamily: '"Times New Roman",serif' }}>
-                  Từ VT&nbsp;
+                  Từ&nbsp;
                 </span>
                 <span
                   style={{
@@ -431,10 +456,12 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  {post.bat_dau_doan}&nbsp;
+                  {/* {post.bat_dau_doan}&nbsp; */}
+                  {post?.bat_dau_doan ? post?.bat_dau_doan : "..........."}
+                  &nbsp;
                 </span>
                 <span style={{ fontFamily: '"Times New Roman",serif' }}>
-                  đến VT&nbsp;
+                  đến&nbsp;
                 </span>
                 <span
                   style={{
@@ -443,7 +470,9 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  {post.ket_thuc_doan}
+                  {/* {post.ket_thuc_doan} */}
+                  {post?.ket_thuc_doan ? post?.ket_thuc_doan : "..........."}
+                  &nbsp;
                 </span>
               </p>
               <p
@@ -1795,19 +1824,21 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  {Tempvalue === "5" ||
-                  Tempvalue === "6" ||
-                  Tempvalue === "7" ||
-                  Tempvalue === "8"
-                    ? "Bất thường ở sứ cách điện: "
-                    : "Vỡ bát"}
-                  {Tempvalue === "5"
-                    ? "Cách điện thủy tinh bị mất (vỡ) bát"
-                    : ""}
-                  {Tempvalue === "6" ? "Cách điện silicon bị rách tán" : ""}
-                  {Tempvalue === "7" ? "Cách điện bị bám vật lạ" : ""}
-                  {Tempvalue === "8" ? "Tuột hãm dây trên chuỗi cách điện" : ""}
-                  {/*.....................................................................................................................................................*/}
+                  {chi_tiet_kiem_tra?.map((item, index) =>
+                    item.defect_name === "cachdientt:vobat"
+                      ? "Cách điện thủy tinh vỡ bát ở vị trí có tọa độ (" +
+                        item.latitude +
+                        "," +
+                        item.longtitude +
+                        "). "
+                      : item.defect_name === "cachdientt:doimau"
+                      ? "Cách điện thủy tinh đổi màu ở vị trí có tọa độ (" +
+                        item.latitude +
+                        "," +
+                        item.longtitude +
+                        "). "
+                      : ""
+                  )}
                 </span>
               </p>
               <p
@@ -1962,12 +1993,49 @@ const BCNGay = (props) => {
                     fontFamily: '"Times New Roman",serif',
                   }}
                 >
-                  {Tempvalue === "2" || Tempvalue === "3"
-                    ? "Bất thường ở đường dây: "
-                    : "Bình thường"}
-                  {Tempvalue === "2" ? "Dây dẫn bị tưa (đứt sợi)" : ""}
-                  {Tempvalue === "3" ? "Quá nhiệt mối nối" : ""}
-                  {/*.....................................................................................................................................................*/}
+                  {/* {chi_tiet_kiem_tra?.map((item, index) =>
+                    item.defect_name === "daydien:doimau"
+                      ? "Dây điện đổi màu ở vị trí có tọa độ  (" +
+                        item.latitude +
+                        "," +
+                        item.longtitude +
+                        ").           "
+                      : ""
+                  )} */}
+                  {/* {chi_tiet_kiem_tra.map((item, index) =>
+                    item.defect_name === "daydien:tuasoi"
+                      ? "Dây điện tưa sợi ở vị trí có tọa độ  (" +
+                        item.latitude +
+                        "," +
+                        item.longtitude +
+                        ").           "
+                      : ""
+                  )} */}
+                  {chi_tiet_kiem_tra.map((item, index) => {
+                    if (item.defect_name === "daydien:tuasoi") {
+                      return (
+                        <>
+                          <p>
+                            Dây điện tưa sợi ở vị trí có tọa độ: {item.latitude}
+                            ; {item.longtitude}
+                            <br />
+                          </p>
+                        </>
+                      );
+                    }
+
+                    if (item.defect_name === "macdivat") {
+                      return (
+                        <>
+                          <p>
+                            Dây điện mắc dị vật ở vị trí có tọa độ:{" "}
+                            {item.latitude}; {item.longtitude}
+                            <br />
+                          </p>
+                        </>
+                      );
+                    }
+                  })}
                 </span>
               </p>
               <p

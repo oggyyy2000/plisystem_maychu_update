@@ -178,7 +178,7 @@ export default function FullViewMap() {
                 color="inherit"
                 size="small"
                 onClick={() => {
-                  setOpen(false);
+                  setOpen(false); //sua
                 }}
                 component={"C"}
               >

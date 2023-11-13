@@ -1,37 +1,38 @@
+// import React from "react";
+
+// export default function Main3D() {
+//   return (
+//     <>
+//       <iframe
+//         src="http://epsmarttech.com.vn:3132/examples/${tuyenSelected}/${tuyenSelected}.html"
+//         style={{ width: "100%", height: "100%" }}
+//       />
+//     </>
+//   );
+// }
+
 import React from "react";
-import { Pannellum, PannellumVideo } from "pannellum-react";
-import myImage1 from "./data_360/1.jpg";
-//import myVideo from "./data_360/videoplayback.mp4";
-import myVideo from "./data_360/project.mp4";
+//Redux
+import { useSelector } from "react-redux";
+import { tuyenSelector } from "../redux/selectors";
 
 export default function Main3D() {
+  const tuyenSelected = useSelector(tuyenSelector);
+  const src3Dmap = `http://epsmarttech.com.vn:3132/examples/${tuyenSelected}/${tuyenSelected}.html`;
+
+  if (tuyenSelected !== "T87") {
+    return (
+      <>
+        <div style={{ top: 10, height: "30px" }}>
+          <p>Không có dữ liệu bạn cần tìm, vui lòng trở lại sau!</p>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      {/* 
-      <Pannellum
-        width="100%"
-        height="500px"
-        image={myImage1}
-        pitch={10}
-        yaw={180}
-        hfov={110}
-        autoLoad
-        onLoad={() => {
-          console.log("panorama loaded");
-        }}
-      ></Pannellum> */}
-      <PannellumVideo
-        video={myVideo}
-        loop
-        width="100%"
-        height="600px"
-        pitch={10}
-        //yaw={180}
-        yaw={0}
-        hfov={140}
-        minHfov={50}
-        maxHfov={180}
-      ></PannellumVideo>
+      <iframe src={src3Dmap} style={{ width: "100%", height: "100%" }} />
     </>
   );
 }

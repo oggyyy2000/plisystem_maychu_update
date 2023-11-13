@@ -184,6 +184,7 @@ export default function DialogPopupImage(props) {
   const GetListIMG = () => {
     async function getDataListImg() {
       let urlg = urllistanh + props.id;
+      console.log(props.id);
       try {
         setIsLoading(true);
         setIsError(false);

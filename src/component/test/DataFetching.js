@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet";
 import React, { useState, useEffect } from "react";
 import {
   FormControl,
@@ -7,11 +6,9 @@ import {
   Select,
   Box,
   ThemeProvider,
-  Container,
   Grid,
   Card,
   CardContent,
-  CardHeader,
 } from "@material-ui/core";
 import axios from "axios";
 import GlobalStyles from "../../asset/css/GlobalStyles";
@@ -21,17 +18,18 @@ import "../../mixins/chartjs";
 import Bieudothongke from "./bieudothongke";
 import Loading from "./Loading";
 import { MucDoLoi } from "./List";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-import { useDispatch, useSelector } from "react-redux";
+// Redux
 import * as actions from "../../redux/types";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Pagination } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
-import { ChangerUrl } from "../../util/ChangeUrl";
+
 import SlideshowGallery from "../generalObject/slideshow-gallery/SlideshowGallery2";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import IconButton from "@material-ui/core/IconButton";
-import { Resize, ResizeHorizon, ResizeVertical } from "react-resize-layout";
+import { Resize, ResizeHorizon } from "react-resize-layout";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -65,13 +63,13 @@ const useStyles = makeStyles(() => ({
 function DataFetching() {
   const classes = useStyles();
   const [ListTuyen, setListTuyen] = useState([]);
-  const [ListThietbi, setListThietBi] = useState({});
-  const [Tuyen, setTuyen] = useState("T87");
+  // const [ListThietbi, setListThietBi] = useState({});
   const dispatch = useDispatch();
   const anhthietbiloi = useSelector((state) => state.anhthietbiloi);
-  const idtuyen = useSelector((state) => state.idtuyen);
+
   const idanh = useSelector((state) => state.idanh);
   const idthietbi = useSelector((state) => state.idthietbi);
+  const tuyenSelected = useSelector((state) => state.tuyenSelect);
   const [dEtail, setdEtail] = useState({});
   const [page, setPage] = useState(1);
   const [ListImgNew, setListImgNew] = useState([]);
@@ -80,18 +78,22 @@ function DataFetching() {
   const [gridSize, setGridSize] = useState({ panelone: 12, paneltwo: 0 });
   const urltttbgs = `${
     process.env.REACT_APP_API_URL
-  }getallttgiamsatthietbis?page=${page}${Tuyen ? "&ma_tuyen=" + Tuyen : ""}`;
+  }getallttgiamsatthietbis?page=${page}${
+    tuyenSelected ? "&ma_tuyen=" + tuyenSelected : ""
+  }`;
 
   const handleChangePage = (e, p) => {
     setPage(p);
   };
 
-  const handleChangetb = (event) => {
-    setListThietBi(event.target.value);
-  };
+  // const handleChangetb = (event) => {
+  //   setListThietBi(event.target.value);
+  // };
 
   const handleChangeTuyen = (event) => {
-    setTuyen(event.target.value);
+    const target = event.target;
+    const value = target.value;
+    dispatch({ type: actions.tuyenSelect, data: value });
   };
 
   useEffect(() => {
@@ -172,7 +174,7 @@ function DataFetching() {
       .catch((err) => {
         console.log(err);
       });
-  }, [Tuyen, page]);
+  }, [tuyenSelected, page]);
 
   let findbykeyinarray = (array, value) => {
     for (let i = 0; i < array.length; i++) {
@@ -293,7 +295,7 @@ function DataFetching() {
                       <Select
                         labelId="label-tuyen"
                         id="labelt"
-                        value={Tuyen}
+                        value={tuyenSelected}
                         onChange={handleChangeTuyen}
                         label="T"
                         defaultValue={""}
@@ -407,9 +409,7 @@ function DataFetching() {
                         <CardContent>
                           <>
                             <Box>
-                              <p>{`Ảnh thiết bị gốc ${
-                                dEtail ? dEtail?.loai_thiet_bi || "" : ""
-                              }`}</p>
+                              <p>{`Ảnh thiết bị `}</p>
 
                               <div
                                 style={{
@@ -417,8 +417,8 @@ function DataFetching() {
                                   //overflow: "auto",
                                   marginBottom: "2%",
                                   marginTop: "2%",
-                                  minHeight: "60%",
-                                  minWidth: "60%",
+                                  minHeight: "100%",
+                                  minWidth: "100%",
                                 }}
                               >
                                 {dEtail &&
@@ -448,7 +448,7 @@ function DataFetching() {
                             )}
                             <br />
                             <Box>
-                              <p>{`Ảnh thiết bị kiểm ngày ${NewDate}`}</p>
+                              {/* <p>{`Ảnh thiết bị kiểm ngày ${NewDate}`}</p> */}
                               {dEtail && ListImgNew && (
                                 <>
                                   <p>{}</p>

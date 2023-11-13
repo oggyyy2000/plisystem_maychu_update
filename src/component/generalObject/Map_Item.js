@@ -8,37 +8,15 @@ import {
   withScriptjs,
   Polyline,
 } from "react-google-maps";
-import { store } from "../../index";
+import store from "../../redux/store";
 import { Provider, useSelector, useDispatch } from "react-redux";
 import Box from "@material-ui/core/Box";
 import $ from "jquery";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";
-// data
-/*
-import { T1 } from "../../util/toado/T1";
-import { T2 } from "../../util/toado/T2";
-import { T3 } from "../../util/toado/T3";
-import { T4 } from "../../util/toado/T4";
-import { T5 } from "../../util/toado/T5";
-import { T6 } from "../../util/toado/T6";
-import { T7 } from "../../util/toado/T7";
-import { T8 } from "../../util/toado/T8";
-*/
-///////////////////////////////////////////
-import {
-  FaCompass,
-  FaTemperatureHigh,
-  FaTemperatureLow,
-  FaWind,
-} from "react-icons/fa";
-import { TiWeatherCloudy } from "react-icons/ti";
-import { WiHumidity } from "react-icons/wi";
-import { WeatherContext } from "../main/contexts/WeatherContext";
+
 import * as actions from "../../redux/types";
-import { Line } from "react-chartjs-2";
 import axios from "axios";
-import { ImageTwoTone } from "@material-ui/icons";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAP_API_KEY;
@@ -270,7 +248,7 @@ const Map_Item = () => {
   useEffect(() => {
     if (ModeShowVideo === "LIVE" && Typewsdata !== "IMG") SetLinePoint([]);
     SetshowInfoIndex(-1);
-    if (Toado) {
+    if (Toado?.length) {
       setTD(Toado);
       var end = Toado.length - 1;
       //var end = 1;
@@ -310,7 +288,7 @@ const Map_Item = () => {
   };
 
   let pathCoordinates = [];
-
+  let location_now = [];
   const rendermap1 = () => {
     return (
       <>
@@ -324,7 +302,7 @@ const Map_Item = () => {
                 new window.google.maps.Size(10, 10)
               );
               let iconMarker2 = new window.google.maps.MarkerImage(
-                `${process.env.REACT_APP_URL}icon/vector.png`,
+                "http://epsmarttech.com.vn:3000/icon/vector.png",
                 null /* size is determined at runtime */,
                 null /* origin is 0,0 */,
                 null /* anchor is bottom center of the scaled image */,
@@ -403,57 +381,60 @@ const Map_Item = () => {
             fullscreenControl: false,
           }}
         >
-          {ModeShowVideo !== "LIVE"
+          {/* {ModeShowVideo !== "LIVE"
             ? rendermap1()
-            : TD.map((item, index) => {
-                const cot = "",
-                  lat = parseFloat(item.latitude),
-                  lng = parseFloat(item.longtitude);
-                console.log(TD);
+            :  */}
+          {TD.map((item, index) => {
+            const cot = "",
+              lat = parseFloat(item.latitude),
+              lng = parseFloat(item.longtitude);
+            console.log("location:", TD);
+            location_now.push({ TD });
+            console.log("location push:", location_now);
 
-                return (
-                  <Marker
-                    key={index}
-                    icon={iconMarker}
-                    //           draggable={true}
-                    //         onDragEnd={onMarkerDragEnd}
-                    position={{ lat: lat, lng: lng }}
-                    onClick={() => {
-                      showInfo(index, item);
-                    }}
-                    animation={1}
-                  >
-                    {showInfoIndex === index && (
-                      <InfoWindow onCloseClick={() => SetshowInfoIndex(-1)}>
-                        <Box
-                          style={{
-                            color: "black",
-                            width: 100,
-                            wordWrap: "break-word",
-                          }}
-                        >
-                          <p>
-                            Tọa độ: {lat} , {lng}
-                          </p>
-                          Bất thường:
-                          <br />
-                          {item.error.map((value, idx) => {
-                            return item.error.length < idx ? (
-                              <b key={idx} style={{ color: "red" }}>
-                                {value.error_label},{" "}
-                              </b>
-                            ) : (
-                              <b key={idx} style={{ color: "red" }}>
-                                {value.error_label}{" "}
-                              </b>
-                            );
-                          })}
-                        </Box>
-                      </InfoWindow>
-                    )}
-                  </Marker>
-                );
-              })}
+            return (
+              <Marker
+                key={index}
+                icon={iconMarker}
+                //           draggable={true}
+                //         onDragEnd={onMarkerDragEnd}
+                position={{ lat: lat, lng: lng }}
+                onClick={() => {
+                  showInfo(index, item);
+                }}
+                animation={1}
+              >
+                {showInfoIndex === index && (
+                  <InfoWindow onCloseClick={() => SetshowInfoIndex(-1)}>
+                    <Box
+                      style={{
+                        color: "black",
+                        width: 100,
+                        wordWrap: "break-word",
+                      }}
+                    >
+                      <p>
+                        Tọa độ: {lat} , {lng}
+                      </p>
+                      Bất thường:
+                      <br />
+                      {item.error.map((value, idx) => {
+                        return item.error.length < idx ? (
+                          <b key={idx} style={{ color: "red" }}>
+                            {value.error_label},{" "}
+                          </b>
+                        ) : (
+                          <b key={idx} style={{ color: "red" }}>
+                            {value.error_label}{" "}
+                          </b>
+                        );
+                      })}
+                    </Box>
+                  </InfoWindow>
+                )}
+              </Marker>
+            );
+          })}
         </GoogleMap>
       );
     })

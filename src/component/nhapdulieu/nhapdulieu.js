@@ -4,8 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../redux/types";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import Loading from "../generalObject/Loading";
 import Button from "@material-ui/core/Button";
@@ -26,20 +24,13 @@ import DialogPopupImage from "../generalObject/VideoDialog/Dialog_Popup_Image";
 import DialogSavePopup2 from "../generalObject/Dialog_Save_Popup 2";
 import DialogImageShow2 from "../generalObject/slideshow-gallery/DialogImageShow2";
 import DialogVideoShow from "../generalObject/slideshow-gallery/DialogVideoShow";
-//import FiberNewIcon from "@material-ui/icons/FiberNew";
-// data
-/*
-import { T1 } from "../../util/toado/T1";
-import { T2 } from "../../util/toado/T2";
-import { T3 } from "../../util/toado/T3";
-import { T4 } from "../../util/toado/T4";
-import { T5 } from "../../util/toado/T5";
-import { T6 } from "../../util/toado/T6";
-import { T7 } from "../../util/toado/T7";
-import { T8 } from "../../util/toado/T8";
-*/
+
 import TodayIcon from "../../asset/Icon.svg";
-///////////////////////////////////////////
+
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../../redux/types";
+import { tuyenSelector } from "../../redux/selectors";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -76,10 +67,9 @@ export default function DotBay() {
   const urlt = process.env.REACT_APP_API_URL + "getalltuyens";
   const urllistvideo = process.env.REACT_APP_API_URL + "getvideodetectimport";
   const urllistanh = process.env.REACT_APP_API_URL + "getimagesdetectimport";
-  const dispatch = useDispatch();
   const classes = useStyles();
-  //const [ListCot, setListCot] = useState([]);
-  const [Tuyen, setTuyen] = useState(null);
+  const tuyenSelected = useSelector(tuyenSelector);
+  const dispatch = useDispatch();
   const [BatDau, setBatDau] = useState(null);
   const [KetThuc, setKetThuc] = useState(null);
   const ModeShowVideo = useSelector((state) => state.modeshowvideo);
@@ -87,7 +77,7 @@ export default function DotBay() {
   const fetchedData = useSelector((state) => state.dbtc);
   const ListTuyen = useSelector((state) => state.listtuyen);
   const urlvt = `${process.env.REACT_APP_API_URL}getallvitribytuyens?${
-    Tuyen ? "&ma_tuyen=" + Tuyen : ""
+    tuyenSelected ? "&ma_tuyen=" + tuyenSelected : ""
   }`;
   const [ListVTT, setListVTT] = useState([]);
   let count = 0;
@@ -111,6 +101,7 @@ export default function DotBay() {
           "Content-Type": "application/json",
         },
       });
+      console.log(res.data);
       return res.data;
     } catch (err) {
       console.error(err);
@@ -222,7 +213,7 @@ export default function DotBay() {
     }
 
     getDatavtt().then((res) => setListVTT(res));
-  }, [Tuyen]);
+  }, [tuyenSelected]);
 
   const getdata = () => {
     getDataDB().then((res) => {
@@ -435,7 +426,7 @@ export default function DotBay() {
     setBatDau(null);
     setKetThuc(null);
     //}
-  }, [Tuyen]);
+  }, [tuyenSelected]);
 
   const onChange = (event, setFunction) => {
     event.preventDefault();
@@ -451,7 +442,9 @@ export default function DotBay() {
   };
 
   const onChangeSelectTuyen = (event) => {
-    onChange(event, setTuyen);
+    const target = event.target;
+    const value = target.value;
+    dispatch({ type: actions.tuyenSelect, data: value });
     Resset_Cot();
   };
 
@@ -641,7 +634,7 @@ export default function DotBay() {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label={"Chọn Tuyến"}
-            value={Tuyen}
+            value={tuyenSelected}
             style={{ height: 40 }}
             onChange={onChangeSelectTuyen}
           >
@@ -743,31 +736,31 @@ export default function DotBay() {
       >
         {fetchedData ? (
           fetchedData.map((post, index) =>
-            Tuyen === null && BatDau === null && KetThuc === null ? (
+            tuyenSelected === null && BatDau === null && KetThuc === null ? (
               render(post, fetchedData)
-            ) : Tuyen !== null &&
+            ) : tuyenSelected !== null &&
               BatDau !== null &&
               KetThuc !== null &&
-              Tuyen === post.ma_tuyen &&
+              tuyenSelected === post.ma_tuyen &&
               BatDau.split("|")[0] === post.bat_dau_doan &&
               KetThuc.split("|")[0] === post.ket_thuc_doan ? (
               render(post, fetchedData)
-            ) : Tuyen !== null &&
+            ) : tuyenSelected !== null &&
               BatDau !== null &&
               KetThuc === null &&
-              Tuyen === post.ma_tuyen &&
+              tuyenSelected === post.ma_tuyen &&
               BatDau.split("|")[0] === post.bat_dau_doan ? (
               render(post, fetchedData)
-            ) : Tuyen !== null &&
+            ) : tuyenSelected !== null &&
               BatDau === null &&
               KetThuc !== null &&
-              Tuyen === post.ma_tuyen &&
+              tuyenSelected === post.ma_tuyen &&
               KetThuc.split("|")[0] === post.ket_thuc_doan ? (
               render(post, fetchedData)
-            ) : Tuyen !== null &&
+            ) : tuyenSelected !== null &&
               BatDau === null &&
               KetThuc === null &&
-              Tuyen === post.ma_tuyen ? (
+              tuyenSelected === post.ma_tuyen ? (
               render(post, fetchedData)
             ) : (
               <>

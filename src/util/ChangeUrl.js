@@ -10,7 +10,7 @@ export const ChangerUrl = (value) => {
       text.search(local_url) !== -1 ? text.replace(local_url, new_url) : text;
     a =
       text.search(local_url_2) !== -1 ? text.replace(local_url_2, new_url) : a;
-
+    // console.log("a:", a);
     var b =
       a.search(isurl) === -1 && a.search(isurls) === -1
         ? "data:image/png;base64," + a

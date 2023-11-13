@@ -50,7 +50,7 @@ export default function ChartDSBT(props) {
           textY2 = 10;
         ctx.fillText(text2, textX2, textY2);*/
         let CurrentTime = new Date().getMonth();
-        var text3 = `Tổng hợp bất thường T${CurrentTime}:`,
+        var text3 = `Tổng hợp bất thường T${CurrentTime + 1}:`,
           textX3 = 5,
           textY3 = height - fontSize - 35;
         ctx.fillText(text3, textX3, textY3);

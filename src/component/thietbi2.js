@@ -8,8 +8,7 @@ import {
   withScriptjs,
   Polyline,
 } from "react-google-maps";
-import { store } from "./../index";
-import { Provider, useSelector, useDispatch } from "react-redux";
+import store from "../redux/store";
 import Box from "@material-ui/core/Box";
 import $ from "jquery";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
@@ -19,7 +18,6 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
@@ -32,12 +30,14 @@ import {
   Select,
 } from "@material-ui/core";
 import Loading from "./generalObject/Loading";
-import { optionltb } from "../util/optionloaitb";
-import { ChangerUrl } from "../util/ChangeUrl";
 import { Pagination } from "@material-ui/lab";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import CloseIcon from "@material-ui/icons/Close";
+
+// Redux
+import * as actions from "../redux/types";
+import { Provider, useSelector, useDispatch } from "react-redux";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -107,8 +107,6 @@ const ThietBi2 = () => {
   const [center, setCenter] = useState({ lat: 21.0286436, lng: 105.855725 });
   const [zoomsize, setZoomsize] = useState(15);
   const [pathPoint, SetPathPoint] = useState([]);
-  const [LinePoint, SetLinePoint] = useState([]);
-  const [showInfoIndex, SetshowInfoIndex] = useState(-1);
   const screen1 = useFullScreenHandle();
   const [stateBtn, setStateBtn] = useState(false);
   ///
@@ -116,7 +114,9 @@ const ThietBi2 = () => {
   const [page, setPage] = useState(1);
   const [fetchedData, setFetchedData] = useState([]);
   const [ListTuyen, setListTuyen] = useState([]);
-  const [Tuyen, setTuyen] = useState("T87");
+
+  const dispatch = useDispatch();
+  const tuyenSelected = useSelector((state) => state.tuyenSelect);
   const [Loai, setLoai] = useState("");
   const [ListVTT, setListVTT] = useState([]);
   const [ListSVTT, setListSVTT] = useState([]);
@@ -127,12 +127,12 @@ const ThietBi2 = () => {
   const [IndexShow, setIndexShow] = useState(-1);
   const urltb = `${
     process.env.REACT_APP_API_URL
-  }getallthietbituyens?page=${page}${Tuyen ? "&ma_tuyen=" + Tuyen : ""}${
-    Loai ? "&loai_thiet_bi=" + Loai : ""
-  }${VTT ? "&ma_vi_tri=" + VTT : ""}`;
+  }getallthietbituyens?page=${page}${
+    tuyenSelected ? "&ma_tuyen=" + tuyenSelected : ""
+  }${Loai ? "&loai_thiet_bi=" + Loai : ""}${VTT ? "&ma_vi_tri=" + VTT : ""}`;
   const urlt = process.env.REACT_APP_API_URL + "getalltuyens";
   const urlvt = `${process.env.REACT_APP_API_URL}getallvitribytuyens?${
-    Tuyen ? "&ma_tuyen=" + Tuyen : ""
+    tuyenSelected ? "&ma_tuyen=" + tuyenSelected : ""
   }`;
 
   ///
@@ -193,7 +193,7 @@ const ThietBi2 = () => {
         //setDetailState(true);
       }
     });
-  }, [page, Tuyen, Loai, VTT]);
+  }, [page, tuyenSelected, Loai, VTT]);
 
   useEffect(() => {
     if (VTT && ListVTT) {
@@ -302,7 +302,7 @@ const ThietBi2 = () => {
         }
       }
     });
-  }, [Tuyen, VTT]);
+  }, [tuyenSelected, VTT]);
 
   const onChange = (event, setFunction) => {
     event.preventDefault();
@@ -312,17 +312,19 @@ const ThietBi2 = () => {
   };
 
   const onChangeSelectTuyen = (event) => {
-    onChange(event, setTuyen);
+    const target = event.target;
+    const value = target.value;
+    dispatch({ type: actions.tuyenSelect, data: value });
     setPage(1);
     setListVTT([]);
     setListSVTT([]);
     setVTT("");
   };
 
-  const onChangeSelectLTB = (event) => {
-    onChange(event, setLoai);
-    setPage(1);
-  };
+  // const onChangeSelectLTB = (event) => {
+  //   onChange(event, setLoai);
+  //   setPage(1);
+  // };
 
   const onChangeSelectVTT = (event) => {
     onChange(event, setVTT);
@@ -456,7 +458,7 @@ const ThietBi2 = () => {
           {ListSVTT &&
             ListSVTT.map((item, index) => {
               let iconMarker = new window.google.maps.MarkerImage(
-                `${process.env.REACT_APP_URL}icon/vector.png`,
+                "http://epsmarttech.com.vn:3000/icon/vector.png",
                 //"https://lh3.googleusercontent.com/RXM0n51Ci_TZkl4SZ7-WrQEAMziRVfttr8ALWeVdI_2pZig0plSwt5IH8BtIaifKACKjXBiPNSNjVjhFfJwY6AIsQzh90hXWmKBUB3p91Ux-E0HMMVcbQg8qwRLMN_JArK0HNVzh7JcAvRgCyFcwqocr21dRpGeSdTorEISfrcBB6Ruskc_IwxSKY8JjoXqGVF9ueAGPGAC-E5RH-uQAPVfB5PMWx9mpLjI5lNBAAq8B4ddwC1mhriyfhLHSsYbNjwUHDFxmX1pkv3DYEw3hvizv0Ask0Yixu2UpyF2_YTzFx-2-IdGG0b7tMRVj0wjqTCMzz8Tpu8WAJc5gpoGVj08QYt-2TYJff6X1H9_XtAZEozRKgVDvGcdpsgSSS9JuBvipccylQIjlyJkA4fnf1itOGY1WUkzaPOz8m_hx_GWBx5s9dRkSiNu08VKtoPuhsAlhwDwV_RdfUKVr006vtuuOgZKOwzOjXlXhPd8xrwHwYW9ZcglTZdA3WHHQQUyxsU3cYLL5W02pKBUl9J8Znx8iSTLmPuIwjFIqx_IeEMt6BthHHaUVVnnXcqpeYrJYIiW5GiD4aT8_zjMzkyUCefuH6_ranu5UYJX079twCku580goJy7z0AzFdcpb2PSk9OmHkU82ADQVJqGuiScDdcNjbfUiBF7DOpdskl53E3GZmRzI9eFq8YySRgKK8cHH3TMkwWlU3WBJYsItZlSyZdw=s34-no?",
                 null /* size is determined at runtime */,
                 null /* origin is 0,0 */,
@@ -734,7 +736,7 @@ const ThietBi2 = () => {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label={"Chọn Tuyến"}
-                value={Tuyen}
+                value={tuyenSelected}
                 style={{ height: 40 }}
                 onChange={onChangeSelectTuyen}
                 displayEmpty
